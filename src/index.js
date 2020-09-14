@@ -5,7 +5,7 @@ import { typeDefs } from './graphql/typedefs';
 import { resolvers } from './graphql/resolvers';
 
 import './infra/mongoose'
-import UserRepository from './repositories/user_repository'
+import UserRepository from './repositories/user'
 
 const server = new ApolloServer({
   typeDefs: gql`

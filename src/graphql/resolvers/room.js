@@ -1,8 +1,8 @@
 import { AuthenticationError } from 'apollo-server'
 import mongoose from 'mongoose'
 
-import RoomRepository from '../../repositories/room_repository'
-import UserRepository  from '../../repositories/user_repository'
+import RoomRepository from '../../repositories/room'
+import UserRepository  from '../../repositories/user'
 
 const roomRepository = new RoomRepository()
 const userRepository = new UserRepository()
