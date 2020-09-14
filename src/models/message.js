@@ -3,14 +3,19 @@ import mongoose, { Schema } from 'mongoose'
 const MODEL_NAME = 'Message'
 
 const messageSchema = new Schema({
-  body: String,
+  body: {
+    type: String,
+    required: true,
+  },
   room: {
     type: Schema.Types.ObjectId,
     ref: 'Room',
+    required: true,
   },
   sender: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   }
 })
 
