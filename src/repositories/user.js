@@ -6,6 +6,7 @@ export default class UserRepository {
   constructor() {
     this.create = this.create.bind(this)
     this.find = this.find.bind(this)
+    this.findOne = this.findOne.bind(this)
   }
 
   async create(name) {
@@ -15,14 +16,18 @@ export default class UserRepository {
   }
 
   async find(filters = {}) {
-    const parsedFilters = pickBy(filters, val => val !== undefined)
+    const parsedFilters = this.parseFindFilters(filters)
 
     return User.find(parsedFilters).exec()
   }
 
   async findOne(filters = {}) {
-    const parsedFilters = pickBy(filters, val => val !== undefined)
+    const parsedFilters = this.parseFindFilters(filters)
 
     return User.findOne(parsedFilters).exec()
+  }
+
+  parseFindFilters(filters) {
+    return pickBy(filters, val => val !== undefined)
   }
 }
