@@ -4,10 +4,15 @@ const MODEL_NAME = 'Room'
 
 const Schema = mongoose.Schema
 const roomSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   participants: [
     {
