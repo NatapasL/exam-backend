@@ -6,5 +6,5 @@ const messageSchema = new Schema({
   name: String,
 })
 
-const Message = mongoose.model(MODEL_NAME, messageSchema)
-export default Message
+const UserModel = mongoose.model(MODEL_NAME, messageSchema)
+export default UserModel
