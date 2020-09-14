@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import pickBy from 'lodash/pickBy'
 
-import Room from '../models/room'
+import RoomModel from '../models/room'
 
 export default class RoomRepository {
   constructor() {
@@ -10,17 +10,21 @@ export default class RoomRepository {
   }
 
   async find(filters = {}) {
-    const parsedFilters = pickBy(filters, val => val !== undefined)
+    const parsedFilters = this.parseFindFilters(filters)
 
-    return Room.find(parsedFilters).exec()
+    return RoomModel.find(parsedFilters).exec()
   }
 
   async create(name, userId) {
-    const room = new Room({
+    const room = new RoomModel({
       name,
       owner: mongoose.Types.ObjectId(userId),
     })
 
     return room.save()
+  }
+
+  parseFindFilters(filters) {
+    return pickBy(filters, val => val !== undefined)
   }
 }
