@@ -1,16 +1,27 @@
-import { AuthenticationError } from 'apollo-server'
-import mongoose from 'mongoose'
+import { AuthenticationError, UserInputError } from 'apollo-server'
 
 import MessageRepository from '../../repositories/message'
 import UserRepository from '../../repositories/user'
+import RoomRepository from '../../repositories/room'
 
 const messageRepository = new MessageRepository()
 const userRepository = new UserRepository()
+const roomRepository = new RoomRepository()
+
+const findRoom = async (roomId) => {
+  const room = await roomRepository.findById(roomId)
+  console.log(room)
+  if (!room) {
+    throw new UserInputError('Room not found')
+  }
+
+  return room
+}
 
 export default {
   Message: {
     sender: async ({ sender }) => (
-      userRepository.findOne({ _id: sender })
+      userRepository.findById(sender)
     )
   },
   Query: {
@@ -18,10 +29,11 @@ export default {
       if (!user) {
         throw new AuthenticationError('Unauthenticated')
       }
+      const room = await findRoom(roomId)
 
       const messages = await messageRepository.find({
-        sender: mongoose.Types.ObjectId(user.id),
-        room: mongoose.Types.ObjectId(roomId),
+        sender: user.id,
+        room: room.id,
       })
 
       return messages
@@ -32,8 +44,9 @@ export default {
       if (!user) {
         throw new AuthenticationError('Unauthenticated')
       }
+      const room = await findRoom(roomId)
 
-      return messageRepository.create(user.id, roomId, body)
+      return messageRepository.create(user.id, room.id, body)
     }
   }
 };
