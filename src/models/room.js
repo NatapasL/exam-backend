@@ -23,5 +23,5 @@ const roomSchema = new Schema({
   ]
 })
 
-const Message = mongoose.model(MODEL_NAME, roomSchema)
-export default Message
+const RoomModel = mongoose.model(MODEL_NAME, roomSchema)
+export default RoomModel
