@@ -1,3 +1,14 @@
+type Room {
+  id: String!
+  name: String!
+  owner: User!
+  participants: [User]
+}
+
+type Query {
+  rooms(name: String): [Room]
+}
+
 type Mutation {
-  createRoom(roomName: String!): VoidResponse
+  createRoom(name: String!): Room
 }
