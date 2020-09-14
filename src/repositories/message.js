@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import pickBy from 'lodash/pickBy'
 
-import Message from '../models/message'
+import MessageModel from '../models/message'
 
 export default class MessageRepository {
   constructor() {
@@ -12,11 +12,11 @@ export default class MessageRepository {
   async find(filters = {}) {
     const parsedFilters = this.parseFindFilters(filters)
 
-    return Message.find(parsedFilters).exec()
+    return MessageModel.find(parsedFilters).exec()
   }
 
   async create(userId, roomId, body) {
-    const message = new Message({
+    const message = new MessageModel({
       sender: mongoose.Types.ObjectId(userId),
       room: mongoose.Types.ObjectId(roomId),
       body: body,

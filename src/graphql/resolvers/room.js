@@ -1,5 +1,4 @@
 import { AuthenticationError } from 'apollo-server'
-import mongoose from 'mongoose'
 
 import RoomRepository from '../../repositories/room'
 import UserRepository  from '../../repositories/user'
@@ -10,7 +9,7 @@ const userRepository = new UserRepository()
 export default {
   Room: {
     owner: async ({ owner }) => (
-      userRepository.findOne({ _id: owner })
+      userRepository.findById(owner)
     ),
     participants: async ({ participants }) => (
       userRepository.find({ _id: participants })
@@ -22,10 +21,7 @@ export default {
         throw new AuthenticationError('Unauthenticated')
       }
 
-      return roomRepository.find({
-        name,
-        owner: mongoose.Types.ObjectId(user.id),
-      })
+      return roomRepository.find({ name, owner: user.id })
     }
   },
   Mutation: {
