@@ -10,7 +10,7 @@ export default class MessageRepository {
   }
 
   async find(filters = {}) {
-    const parsedFilters = pickBy(filters, val => val !== undefined)
+    const parsedFilters = this.parseFindFilters(filters)
 
     return Message.find(parsedFilters).exec()
   }
@@ -23,5 +23,9 @@ export default class MessageRepository {
     })
 
     return message.save()
+  }
+
+  parseFindFilters(filters) {
+    return pickBy(filters, val => val !== undefined)
   }
 }
