@@ -7,6 +7,7 @@ export default class RoomRepository {
   constructor() {
     this.find = this.find.bind(this)
     this.create = this.create.bind(this)
+    this.findById = this.findById.bind(this)
   }
 
   async find(filters = {}) {
@@ -22,6 +23,13 @@ export default class RoomRepository {
     })
 
     return room.save()
+  }
+
+  async findById(id) {
+    if (!mongoose.Types.ObjectId.isValid(id)) return null
+    const parsedId = mongoose.Types.ObjectId(id)
+
+    return RoomModel.findById(parsedId).exec()
   }
 
   parseFindFilters(filters) {

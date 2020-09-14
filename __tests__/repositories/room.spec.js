@@ -47,6 +47,41 @@ describe('find', () => {
   })
 })
 
+describe('findById', () => {
+  describe('id invalid', () => {
+    it('return null', async () => {
+      jest
+        .spyOn(mongoose.Types.ObjectId, 'isValid')
+        .mockImplementationOnce(() => false)
+
+      const roomRepository = new RoomRepository()
+      const room = await roomRepository.findById()
+
+      expect(room).toBe(null)
+    })
+  })
+
+  describe('id valid', () => {
+    it('find room', async () => {
+      const roomId = '1'
+      const expectedResult = { id: 1, name: 'room1' }
+      const findByIdMock = jest.fn(() => ({ exec: () => expectedResult }))
+      jest
+        .spyOn(mongoose.Types, 'ObjectId')
+        .mockImplementationOnce(() => roomId)
+      mongoose.Types.ObjectId.isValid = () => true
+      jest
+        .spyOn(RoomModel, 'findById')
+        .mockImplementationOnce(findByIdMock)
+
+      const roomRepository = new RoomRepository()
+      const room = await roomRepository.findById()
+
+      expect(room).toBe(expectedResult)
+    })
+  })
+})
+
 describe('parseFindFilters', () => {
   it('remove filter with undefined value', () => {
     const filters = {
