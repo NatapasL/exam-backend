@@ -1,5 +1,4 @@
 import { ApolloServer, gql } from 'apollo-server';
-import mongoose from 'mongoose'
 
 import { typeDefs } from './graphql/typedefs';
 import { resolvers } from './graphql/resolvers';
@@ -16,9 +15,7 @@ const server = new ApolloServer({
     const { userid } = req.headers
 
     const userRepository = new UserRepository()
-    const user = await userRepository.findOne({
-      _id: mongoose.Types.ObjectId(userid)
-    })
+    const user = await userRepository.findById(userid)
 
     return { user }
   }

@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+
 import UserRepository from '../../src/repositories/user'
 import UserModel from '../../src/models/user'
 
@@ -45,24 +47,38 @@ describe('find', () => {
   })
 })
 
-describe('findOne', () => {
-  it('find one user', async () => {
-    const parsedFilters = { name: 'user1' }
-    const expectedResult = { id: 1, name: 'user1' }
+describe('findById', () => {
+  describe('id invalid', () => {
+    it('return null', async () => {
+      jest
+        .spyOn(mongoose.Types.ObjectId, 'isValid')
+        .mockImplementationOnce(() => false)
 
-    const findOneMock = jest.fn(() => ({ exec: () => expectedResult }))
-    jest
-      .spyOn(UserRepository.prototype, 'parseFindFilters')
-      .mockImplementationOnce(() => parsedFilters)
-    jest
-      .spyOn(UserModel, 'findOne')
-      .mockImplementationOnce(findOneMock)
+      const userRepository = new UserRepository()
+      const user = await userRepository.findById()
 
-    const userRepository = new UserRepository()
-    const user = await userRepository.findOne()
+      expect(user).toBe(null)
+    })
+  })
 
-    expect(findOneMock).toHaveBeenCalledWith(parsedFilters)
-    expect(user).toBe(expectedResult)
+  describe('id valid', () => {
+    it('find user', async () => {
+      const userId = '1'
+      const expectedResult = { id: 1, name: 'user1' }
+      const findByIdMock = jest.fn(() => ({ exec: () => expectedResult }))
+      jest
+        .spyOn(mongoose.Types, 'ObjectId')
+        .mockImplementationOnce(() => userId)
+      mongoose.Types.ObjectId.isValid = () => true
+      jest
+        .spyOn(UserModel, 'findById')
+        .mockImplementationOnce(findByIdMock)
+
+      const userRepository = new UserRepository()
+      const user = await userRepository.findById()
+
+      expect(user).toBe(expectedResult)
+    })
   })
 })
 
