@@ -2,7 +2,6 @@ type Room {
   id: String!
   name: String!
   owner: User!
-  participants: [User]
 }
 
 type Query {

@@ -11,9 +11,6 @@ export default {
     owner: async ({ owner }) => (
       userRepository.findById(owner)
     ),
-    participants: async ({ participants }) => (
-      userRepository.find({ _id: participants })
-    )
   },
   Query: {
     rooms: async (_, { name }) => {

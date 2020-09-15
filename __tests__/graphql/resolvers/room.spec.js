@@ -28,27 +28,6 @@ describe('Room', () => {
       expect(result).toBe(expectedResult)
     })
   })
-
-  describe('participants', () => {
-    it('find participants by id', async () => {
-      const participantIds = ['1', '2']
-      const parent = { participants: participantIds }
-
-      const expectedResult = [
-        { id: '1', name: 'user1' },
-        { id: '2', name: 'user2' },
-      ]
-      const findMock = jest.fn(() => expectedResult)
-      jest
-        .spyOn(UserRepository.prototype, 'find')
-        .mockImplementationOnce(findMock)
-
-      const result = await RoomResolver.Room.participants(parent)
-
-      expect(findMock).toHaveBeenCalledWith({ _id: participantIds })
-      expect(result).toBe(expectedResult)
-    })
-  })
 })
 
 describe('Query', () => {
