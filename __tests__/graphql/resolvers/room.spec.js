@@ -61,7 +61,7 @@ describe('Query', () => {
 
         expect(RoomResolver.Query.rooms(parent, args, context))
           .rejects
-          .toBe(AuthenticationError)
+          .toBeInstanceOf(AuthenticationError)
       })
     })
 
@@ -95,7 +95,7 @@ describe('Mutation', () => {
 
         expect(RoomResolver.Mutation.createRoom(parent, args, context))
           .rejects
-          .toBe(AuthenticationError)
+          .toBeInstanceOf(AuthenticationError)
       })
     })
 
