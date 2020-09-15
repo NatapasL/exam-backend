@@ -1,6 +1,8 @@
 import './infra/mongoose'
 import server from './infra/server'
 
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+const PORT = process.env.PORT || 4000
+
+server.listen({ port: PORT }, () => {
+  console.log(`Sever is listening to port ${PORT}`)
+})

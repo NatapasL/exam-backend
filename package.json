@@ -19,10 +19,13 @@
   },
   "dependencies": {
     "apollo-server": "^2.11.0",
+    "apollo-server-express": "^2.17.0",
     "apollo-server-testing": "^2.11.0",
     "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "graphql": "^14.6.0",
     "graphql-tools": "^4.0.7",
+    "http": "^0.0.1-security",
     "jest": "^25.1.0",
     "lodash": "^4.17.15",
     "merge-graphql-schemas": "^1.6.2-3705b28.0",
@@ -32,7 +35,10 @@
   "jest": {
     "verbose": true,
     "coverageDirectory": "./coverage",
-    "coverageReporters": ["text", "html"],
+    "coverageReporters": [
+      "text",
+      "html"
+    ],
     "testEnvironment": "node"
   }
 }
