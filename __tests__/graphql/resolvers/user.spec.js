@@ -20,8 +20,8 @@ afterEach(() => {
 
 describe('Query', () => {
   describe('users', () => {
-    const message = `
-      query ($name: String!) {
+    const message = gql`
+      query ($name: String) {
         users(name: $name) {
           id
           name
@@ -30,29 +30,33 @@ describe('Query', () => {
     `
     it('find users', async () => {
       const variables = { name: 'user1' }
-      const expectedResult = {
+      const expectedResult = [{
         id: '1234',
         name: 'user1'
-      }
-      const findMock = jest.fn(() => ({ id: '1234', name: 'user1' }))
+      }]
+      const findMock = jest.fn(() => [{ id: '1234', name: 'user1' }])
       jest
         .spyOn(UserRepository.prototype, 'find')
         .mockImplementationOnce(findMock)
 
-      const res = await query({
+      const {
+        data: {
+          users
+        }
+      } = await query({
         query: message,
         variables,
       })
 
       expect(findMock).toHaveBeenCalledWith({ name: variables.name })
-      expect(res.body.users).toEq(expectedResult)
+      expect(users).toEqual(expectedResult)
     })
   })
 })
 
 describe('Mutation', () => {
   describe('createUser', () => {
-    const message = `
+    const message = gql`
       mutation ($name: String!) {
         createUser(name: $name) {
           id
@@ -72,13 +76,17 @@ describe('Mutation', () => {
         .spyOn(UserRepository.prototype, 'create')
         .mockImplementationOnce(createMock)
 
-      const res = await mutate({
+      const {
+        data: {
+          createUser
+        }
+      } = await mutate({
         mutation: message,
         variables,
       })
 
       expect(createMock).toHaveBeenCalledWith(variables.name)
-      expect(res.body.createUser).toEq(expectedResult)
+      expect(createUser).toEqual(expectedResult)
     })
   })
 })
