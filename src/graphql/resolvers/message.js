@@ -1,5 +1,6 @@
 import { AuthenticationError, UserInputError } from 'apollo-server'
 
+import { pubsub } from '../pubsub'
 import MessageRepository from '../../repositories/message'
 import UserRepository from '../../repositories/user'
 import RoomRepository from '../../repositories/room'
@@ -18,11 +19,18 @@ const findRoom = async (roomId) => {
   return room
 }
 
+const MESSAGE_CREATED = 'MESSAGE_CREATED'
+
 export default {
   Message: {
     sender: async ({ sender }) => (
       userRepository.findById(sender)
     )
+  },
+  Subscription: {
+    newMessage: {
+      subscribe: () => pubsub.asyncIterator([MESSAGE_CREATED])
+    }
   },
   Query: {
     messages: async (_, { roomId }) => {
@@ -39,8 +47,10 @@ export default {
         throw new AuthenticationError('Unauthenticated')
       }
       const room = await findRoom(roomId)
+      const message = await messageRepository.create(user.id, room.id, body)
+      pubsub.publish(MESSAGE_CREATED, { newMessage: message });
 
-      return messageRepository.create(user.id, room.id, body)
+      return message
     }
   }
 };
