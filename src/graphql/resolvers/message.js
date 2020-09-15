@@ -10,7 +10,7 @@ const roomRepository = new RoomRepository()
 
 const findRoom = async (roomId) => {
   const room = await roomRepository.findById(roomId)
-  console.log(room)
+
   if (!room) {
     throw new UserInputError('Room not found')
   }
