@@ -27,7 +27,6 @@ describe('Message', () => {
 describe('Query', () => {
   describe('messages', () => {
     const parent = {}
-    const context = { user: { id: '1' } }
 
     describe('room not found', () => {
       it('throw user input error', () => {
@@ -38,7 +37,7 @@ describe('Query', () => {
           .spyOn(RoomRepository.prototype, 'findById')
           .mockImplementationOnce(findByIdMock)
 
-        expect(MessageResolver.Query.messages(parent, args, context))
+        expect(MessageResolver.Query.messages(parent, args))
           .rejects
           .toBeInstanceOf(UserInputError)
       })
@@ -58,12 +57,9 @@ describe('Query', () => {
           .spyOn(MessageRepository.prototype, 'find')
           .mockImplementationOnce(findMock)
 
-        const result = await MessageResolver.Query.messages(parent, args, context)
+        const result = await MessageResolver.Query.messages(parent, args)
 
-        expect(findMock).toHaveBeenCalledWith({
-          sender: '1',
-          room: '15'
-        })
+        expect(findMock).toHaveBeenCalledWith({ room: '15' })
         expect(result).toBe(expectedResult)
       })
     })
