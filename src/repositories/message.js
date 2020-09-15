@@ -4,11 +4,6 @@ import pickBy from 'lodash/pickBy'
 import MessageModel from '../models/message'
 
 export default class MessageRepository {
-  constructor() {
-    this.create = this.create.bind(this)
-    this.find = this.find.bind(this)
-  }
-
   async find(filters = {}) {
     const parsedFilters = this.parseFindFilters(filters)
 
