@@ -4,12 +4,6 @@ import pickBy from 'lodash/pickBy'
 import RoomModel from '../models/room'
 
 export default class RoomRepository {
-  constructor() {
-    this.find = this.find.bind(this)
-    this.create = this.create.bind(this)
-    this.findById = this.findById.bind(this)
-  }
-
   async find(filters = {}) {
     const parsedFilters = this.parseFindFilters(filters)
 
