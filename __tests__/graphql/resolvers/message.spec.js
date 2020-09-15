@@ -4,6 +4,7 @@ import MessageResolver from '../../../src/graphql/resolvers/message'
 import MessageRepository from '../../../src/repositories/message'
 import UserRepository from '../../../src/repositories/user'
 import RoomRepository from '../../../src/repositories/room'
+import { pubsub } from '../../../src/graphql/pubsub'
 
 describe('Message', () => {
   describe('sender', () => {
@@ -121,6 +122,23 @@ describe('Mutation', () => {
           expect(createMock).toHaveBeenCalledWith('1', '15', 'message')
           expect(result).toBe(expectedResult)
         })
+      })
+    })
+  })
+})
+
+describe('Subscription', () => {
+  describe('newMessage', () => {
+    describe('subscribe', () => {
+      it('async iterate', () => {
+        const asyncIteratorMock = jest.fn(() => { })
+        jest
+          .spyOn(pubsub, 'asyncIterator')
+          .mockImplementationOnce(asyncIteratorMock)
+
+        MessageResolver.Subscription.newMessage.subscribe()
+
+        expect(asyncIteratorMock).toHaveBeenCalled()
       })
     })
   })
