@@ -25,59 +25,45 @@ describe('Message', () => {
 
 describe('Query', () => {
   describe('messages', () => {
-    describe('user is blank', () => {
-      it('throw authentication error', () => {
-        const parent = {}
+    const parent = {}
+    const context = { user: { id: '1' } }
+
+    describe('room not found', () => {
+      it('throw user input error', () => {
         const args = {}
-        const context = { user: null }
+
+        const findByIdMock = jest.fn(() => null)
+        jest
+          .spyOn(RoomRepository.prototype, 'findById')
+          .mockImplementationOnce(findByIdMock)
 
         expect(MessageResolver.Query.messages(parent, args, context))
           .rejects
-          .toBeInstanceOf(AuthenticationError)
+          .toBeInstanceOf(UserInputError)
       })
     })
 
-    describe('user is present', () => {
-      const parent = {}
-      const context = { user: { id: '1' } }
+    describe('room found', () => {
+      it('find messages', async () => {
+        const args = { roomId: '15' }
 
-      describe('room not found', () => {
-        it('throw user input error', () => {
-          const args = {}
+        const expectedResult = [{ id: '1', body: 'message' }]
+        const findByIdMock = jest.fn(() => ({ id: '15' }))
+        jest
+          .spyOn(RoomRepository.prototype, 'findById')
+          .mockImplementationOnce(findByIdMock)
+        const findMock = jest.fn(() => expectedResult)
+        jest
+          .spyOn(MessageRepository.prototype, 'find')
+          .mockImplementationOnce(findMock)
 
-          const findByIdMock = jest.fn(() => null)
-          jest
-            .spyOn(RoomRepository.prototype, 'findById')
-            .mockImplementationOnce(findByIdMock)
+        const result = await MessageResolver.Query.messages(parent, args, context)
 
-          expect(MessageResolver.Query.messages(parent, args, context))
-            .rejects
-            .toBeInstanceOf(UserInputError)
+        expect(findMock).toHaveBeenCalledWith({
+          sender: '1',
+          room: '15'
         })
-      })
-
-      describe('room found', () => {
-        it('find messages', async () => {
-          const args = { roomId: '15' }
-
-          const expectedResult = [{ id: '1', body: 'message' }]
-          const findByIdMock = jest.fn(() => ({ id: '15' }))
-          jest
-            .spyOn(RoomRepository.prototype, 'findById')
-            .mockImplementationOnce(findByIdMock)
-          const findMock = jest.fn(() => expectedResult)
-          jest
-            .spyOn(MessageRepository.prototype, 'find')
-            .mockImplementationOnce(findMock)
-
-          const result = await MessageResolver.Query.messages(parent, args, context)
-
-          expect(findMock).toHaveBeenCalledWith({
-            sender: '1',
-            room: '15'
-          })
-          expect(result).toBe(expectedResult)
-        })
+        expect(result).toBe(expectedResult)
       })
     })
   })

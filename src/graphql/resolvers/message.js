@@ -25,16 +25,10 @@ export default {
     )
   },
   Query: {
-    messages: async (_, { roomId }, { user }) => {
-      if (!user) {
-        throw new AuthenticationError('Unauthenticated')
-      }
+    messages: async (_, { roomId }) => {
       const room = await findRoom(roomId)
 
-      const messages = await messageRepository.find({
-        sender: user.id,
-        room: room.id,
-      })
+      const messages = await messageRepository.find({ room: room.id })
 
       return messages
     }
