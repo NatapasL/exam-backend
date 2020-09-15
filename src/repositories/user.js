@@ -4,12 +4,6 @@ import pickBy from 'lodash/pickBy'
 import UserModel from '../models/user'
 
 export default class UserRepository {
-  constructor() {
-    this.create = this.create.bind(this)
-    this.find = this.find.bind(this)
-    this.findById = this.findById.bind(this)
-  }
-
   async create(name) {
     const user = new UserModel({ name })
 
