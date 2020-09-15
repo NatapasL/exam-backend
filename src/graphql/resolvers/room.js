@@ -16,12 +16,8 @@ export default {
     )
   },
   Query: {
-    rooms: async (_, { name }, { user }) => {
-      if (!user) {
-        throw new AuthenticationError('Unauthenticated')
-      }
-
-      return roomRepository.find({ name, owner: user.id })
+    rooms: async (_, { name }) => {
+      return roomRepository.find({ name })
     }
   },
   Mutation: {

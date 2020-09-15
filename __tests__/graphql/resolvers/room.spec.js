@@ -53,34 +53,20 @@ describe('Room', () => {
 
 describe('Query', () => {
   describe('rooms', () => {
-    describe('user is blank', () => {
-      it('throw authentication error', () => {
-        const parent = {}
-        const args = {}
-        const context = { user: null }
+    it('find rooms', async () => {
+      const parent = {}
+      const args = { name: 'room1' }
+      const context = { user: { id: '1' } }
 
-        expect(RoomResolver.Query.rooms(parent, args, context))
-          .rejects
-          .toBeInstanceOf(AuthenticationError)
-      })
-    })
+      const expectedResult = [{ id: 1, name: 'room1' }]
+      const findMock = jest.fn(() => expectedResult)
+      jest
+        .spyOn(RoomRepository.prototype, 'find')
+        .mockImplementationOnce(findMock)
+      const result = await RoomResolver.Query.rooms(parent, args, context)
 
-    describe('user is present', () => {
-      it('find rooms', async () => {
-        const parent = {}
-        const args = { name: 'room1' }
-        const context = { user: { id: '1' } }
-
-        const expectedResult = [{ id: 1, name: 'room1' }]
-        const findMock = jest.fn(() => expectedResult)
-        jest
-          .spyOn(RoomRepository.prototype, 'find')
-          .mockImplementationOnce(findMock)
-        const result = await RoomResolver.Query.rooms(parent, args, context)
-
-        expect(findMock).toHaveBeenCalledWith({ name: 'room1', owner: '1' })
-        expect(result).toBe(expectedResult)
-      })
+      expect(findMock).toHaveBeenCalledWith({ name: 'room1', owner: '1' })
+      expect(result).toBe(expectedResult)
     })
   })
 })
