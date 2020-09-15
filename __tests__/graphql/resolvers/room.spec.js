@@ -35,16 +35,15 @@ describe('Query', () => {
     it('find rooms', async () => {
       const parent = {}
       const args = { name: 'room1' }
-      const context = { user: { id: '1' } }
 
       const expectedResult = [{ id: 1, name: 'room1' }]
       const findMock = jest.fn(() => expectedResult)
       jest
         .spyOn(RoomRepository.prototype, 'find')
         .mockImplementationOnce(findMock)
-      const result = await RoomResolver.Query.rooms(parent, args, context)
+      const result = await RoomResolver.Query.rooms(parent, args)
 
-      expect(findMock).toHaveBeenCalledWith({ name: 'room1', owner: '1' })
+      expect(findMock).toHaveBeenCalledWith({ name: 'room1'})
       expect(result).toBe(expectedResult)
     })
   })
